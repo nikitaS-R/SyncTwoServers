@@ -20,5 +20,5 @@ app.get('/sync',async(req,res)=>{
 });
 
 app.listen(process.env.PORT,()=>{
-      console.log(`Server listening port ${process.env.PORT}`)
+      console.log(`Server listening poasddddddddddrt ${process.env.PORT}`)
 })
