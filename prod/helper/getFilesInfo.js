@@ -1,4 +1,6 @@
 const fs = require('fs');
+const http = require('http')
+
 
 function getFilesInfo (dir,files_){
     files_ = files_ || [];

@@ -1,0 +1,10 @@
+{
+  "dependencies": {
+    "axios": "^0.21.1",
+    "decompress": "^4.2.1",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "node-stream-zip": "^1.14.0",
+    "shelljs": "^0.8.4"
+  }
+}

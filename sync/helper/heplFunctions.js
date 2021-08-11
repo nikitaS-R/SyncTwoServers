@@ -1,5 +1,6 @@
 const axios = require('axios');
 
+
 function difference (prod_arr,back_arr){   
     
     var result = {
@@ -33,9 +34,9 @@ function difference (prod_arr,back_arr){
     return result;
 }
 
-async function getInfo(server) {
+async function getInfo(server,opts) {
     try {
-        const response = await axios.get('http://'+ server + process.env.GETFILEREQ);
+        const response = await axios.get('https://'+ server + process.env.GETFILEREQ,opts);
         return response.data;
     } catch (error) {
         console.error(error);

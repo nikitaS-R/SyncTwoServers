@@ -3,6 +3,9 @@ const axios = require('axios');
 const shell = require('shelljs');
 const decompress = require('decompress');
 const StreamZip = require('node-stream-zip');
+const agent = require('../cert/agent');
+
+let opts = { httpsAgent: agent('client_back') };
 
 //get info about files
 function getFilesInfo (dir,files_){
@@ -35,7 +38,7 @@ function getFilesInfo (dir,files_){
 //get info from server
 async function getInfo(server) {
     try {
-        const response = await axios.get('http://'+ server +process.env.sendDataReq);
+        const response = await axios.get('https://'+ server +process.env.sendDataReq,opts);
         return response.data;
     } catch (error) {
         console.error(error);
@@ -76,7 +79,6 @@ function convertToArrObject(arrPath){
     for (const entry of Object.values(entries)) {
         for(const a of arrForZip){
             if(a.name === entry.name){
-                console.log(a.name+'==='+entry.name)
                 await zip.extract(entry, '.'+a.path);
                 console.log(`File ${entry} is created`)
             }

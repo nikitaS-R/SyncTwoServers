@@ -1,8 +1,9 @@
 const fs = require('fs');
 const axios = require('axios');
 const hfunc = require('../helpFunction');
+const agent = require('../../cert/agent');
 
-
+let opts = { httpsAgent: agent('client_back') };
 
 //function for delete files
 function deleteFile(forDelete){
@@ -22,35 +23,33 @@ async function updateFiles(forCreate){
     forCreate.map(async f=>{
      try {
         hfunc.createFolder(f);
-        await axios({
-            method: "get",
-            url: `${process.env.urlDonloadFile}/?filepath=${encodeURIComponent(f)}`,
-            responseType: "stream"
-        }).then(function (response) {
-            response.data.pipe(fs.createWriteStream(f));
-            console.log(`File ${f} is updated`)
-        });
+        await axios.get(`${process.env.urlDonloadFile}/?filepath=${encodeURIComponent(f)}`,opts)
+                .then(function(response){
+                    fs.writeFileSync(f,response.data)
+                    console.log(`File ${f} is updated`)
+                });
      } catch (error) {
          console.error(error);
      }
     })
-};
+}
 
 //function for create file from ZIP
 async function createZip(forCreate){
         
     let arrForZip = hfunc.convertArrZip(forCreate)
     forCreate.map(f => hfunc.createFolder(f));
-    
+
     await axios({
         method: 'post',
         url: process.env.urlGetZip,
         data: arrForZip,
-        responseType: "stream"
+        responseType: "stream",
+        httpsAgent: agent('client_back')
     }).then((res)=>{
           res.data.pipe(fs.createWriteStream(process.env.createPathZIP)).on('finish', async function(){
               console.log('finish download');
-              hfunc.unzipFile(forCreate,arrForZip,process.env.fullPathZIP);
+              hfunc.unzipFile(forCreate,arrForZip);
           });
     })
     
